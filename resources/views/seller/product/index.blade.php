@@ -12,7 +12,7 @@
                 <th>Image</th>
                 <th>Name</th>
                 <th>Category</th>
-                <th>Stock</th>
+                {{-- <th>Stock</th> --}}
                 <th>Price</th>
                 <th>Display Status</th>
                 <th>Action</th>
@@ -77,9 +77,9 @@
           {
             data: data => data.categories.join(', ')
           },
-          {
-            data: 'stock'
-          },
+          // {
+          //   data: 'stock'
+          // },
           {
             data: 'price'
           },
@@ -98,14 +98,14 @@
           {
             data: data => {
               return `
-              <div class="d-flex" style="gap:.3em">
-                <a class="btn btn-primary btn-sm" href="${url.origin}/seller/products/${data.id}/edit">edit</a>
-                <form class='delete-form' action="${url.origin+'/seller/products/'+data.id}" method='post'> @csrf @method('delete')
-                  <button class="btn btn-danger btn-sm" data-id="${data.id}">delete</button>
-                </form>
-              </div>
-              <button class="btn btn-info btn-sm edit-stock-btn w-100 mt-1" data-stock="${data.stock}" data-id="${data.id}" data-product-name="${data.name}">stock edit</button>
-            `
+                <div class="d-flex" style="gap:.3em">
+                  <a class="btn btn-primary btn-sm" href="${url.origin}/seller/products/${data.id}/edit">edit</a>
+                  <form class='delete-form' action="${url.origin+'/seller/products/'+data.id}" method='post'> @csrf @method('delete')
+                    <button class="btn btn-danger btn-sm" data-id="${data.id}">delete</button>
+                  </form>
+                </div>
+              `
+              let stockBtn = `<button class="btn btn-info btn-sm edit-stock-btn w-100 mt-1" data-stock="${data.stock}" data-id="${data.id}" data-product-name="${data.name}">stock edit</button>`;
             }
           },
         ],

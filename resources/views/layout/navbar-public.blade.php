@@ -23,24 +23,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="{{ url()->to('/product') }}">Products <span class="sr-only">(current)</span></a>
+          {{-- <a class="nav-link" href="{{ url()->to('/products') }}">Products <span class="sr-only">(current)</span></a> --}}
         </li>
       </ul>
 
       <span class="navbar-text">
         @if (auth()->check())
-          @if (auth()->user()->role === 'buyer')
-            <a href="{{ route('carts.index') }}" class="mr-2" id="cart-count" >
-              <i class="fas fa-shopping-cart"></i>
-              <?php $cart_number = \App\Models\Cart::where([
-                'buyer_id' => auth()->user()->id,
-                'is_checkout' => 0
-              ])->count() ?>
-              @if ($cart_number)
-                <span class="badge badge-light">{{ $cart_number }}</span>
-              @endif
-            </a>
-          @endif
           <div class="btn-group">
             <i id="user-dropdown" class="fas fa-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
             <div class="dropdown-menu">

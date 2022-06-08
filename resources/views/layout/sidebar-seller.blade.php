@@ -65,5 +65,25 @@
       </ul>
     </li>
 
+    <li class="nav-item">
+      <a href="{{ route('table-order.index') }}"
+        class="nav-link {{ route('table-order.index') !== url()->current() ?: 'active' }}">
+        <i class="nav-icon fas fa-concierge-bell"></i>
+        <p>
+          Orders
+        </p>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{{ url()->to('/profile-setting') }}"
+        class="nav-link {{ url()->to('/profile-setting') !== url()->current() ?: 'active' }}">
+        <i class="nav-icon fas fa-user-edit"></i>
+        <p>
+          Profile
+        </p>
+      </a>
+    </li>
+
   </ul>
 </nav>

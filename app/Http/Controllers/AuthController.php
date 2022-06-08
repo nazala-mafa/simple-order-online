@@ -53,4 +53,25 @@ class AuthController extends Controller
         auth()->logout();
         return redirect()->to('/login');
     }
+
+    function profile_setting() {
+        if(!auth()->check()) return redirect()->back()->withErrors(['You are not authorized']);
+        return view('guest.auth.setting-profile', ['title'=>'Setting Profile']);
+    }
+    function profile_setting_attempt(Request $request) {
+        if(!auth()->check()) return redirect()->back()->withErrors(['You are not authorized']);
+        
+        $request->validate([
+            'name' => ['required', 'min:4', 'max:255', 'unique:users,name,'.auth()->user()->id],
+            'email' => ['required', 'min:4', 'max:255', 'unique:users,email,'.auth()->user()->id, 'email'],
+        ]);
+        
+        $user = User::find(auth()->user()->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($request->password) $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->back()->with('message', 'Your profile updated');
+    }
 }
