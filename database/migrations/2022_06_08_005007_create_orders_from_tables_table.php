@@ -27,7 +27,7 @@ return new class extends Migration
 
         Schema::create('orders_from_tables_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(OrderFromTable::class, 'order_id');
+            $table->foreignIdFor(OrderFromTable::class, 'order_id')->references('id')->on('orders_from_tables');
             $table->foreignIdFor(Product::class);
             $table->float('price');
             $table->integer('amount');

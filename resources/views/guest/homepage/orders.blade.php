@@ -28,16 +28,20 @@
                   <td class="text-capitalize">{{ str_replace('_', ' ', $order->status) }}</td>
                   <td>
                     @if ($tableId == $order->table_id)
-                    <button 
-                      data-on-behalf-of="{{ $order->on_behalf_of }}"
-                      data-detail='{{ $order->detail->map(function($row){
-                        $row['name'] = $row->product()->pluck('name')[0]; 
-                        return $row;
-                      })->toJson() }}' 
-                      data-table-id="{{ $order->table_id }}" 
-                      data-sum-total="{{ $order->sum_total }}"
-                      class="btn btn-sm btn-primary btn-detail"  
-                    >detail</button>
+                      @if ($order->status == 'in_payment')
+                          <a href="{{ $order->payment_url }}" class="btn btn-primary btn-sm">Pay</a>
+                      @else
+                        <button 
+                          data-on-behalf-of="{{ $order->on_behalf_of }}"
+                          data-detail='{{ $order->detail->map(function($row){
+                            $row['name'] = $row->product()->pluck('name')[0]; 
+                            return $row;
+                          })->toJson() }}' 
+                          data-table-id="{{ $order->table_id }}" 
+                          data-sum-total="{{ $order->sum_total }}"
+                          class="btn btn-sm btn-primary btn-detail"  
+                        >detail</button>
+                      @endif
                     @endif
                   </td>
                 </tr>

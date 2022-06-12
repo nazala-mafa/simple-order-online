@@ -32,5 +32,15 @@
       </a>
     </li>
 
+    <li class="nav-item">
+      <a href="{{ url()->to('/admin/setting') }}"
+        class="nav-link {{ url()->to('/admin/setting') !== url()->current() ?: 'active' }}">
+        <i class="nav-icon fas fa-cog"></i>
+        <p>
+          Setting
+        </p>
+      </a>
+    </li>
+
   </ul>
 </nav>

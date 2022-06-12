@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Option;
 use App\Models\OrderFromTable;
 use App\Models\OrderFromTableDetail;
 use App\Models\Product;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class OrderFromTableController extends Controller
@@ -20,7 +22,7 @@ class OrderFromTableController extends Controller
             return view('guest.homepage.orders', [
                 'noHeader' => true,
                 'title' => 'List Orders',
-                'orders' => OrderFromTable::where('status', '!=', 'done')->get(),
+                'orders' => OrderFromTable::whereNotIn('status', ['done'])->get(),
                 'tableId' => request()->table_id
             ]);
         }
@@ -60,20 +62,44 @@ class OrderFromTableController extends Controller
                 'status' => 'pending'
             ];
         });
+
         $orderId = OrderFromTable::insertGetId([
             'table_id' => $request->table_id,
             'on_behalf_of' => $request->on_behalf_of,
             'sum_total' => $sumTotal,
-            'status' => 'pending', //asumsi sudah bayar
+            'status' => 'in_payment', 
+            'payment_url' => '',
             'created_at' => now()->format('Y-m-d H:i:s')
         ]);
+
+        $xenditApiKey = Option::where('key', 'xendit_api_key')->pluck('value')->first() ?? false;
+        if($xenditApiKey) {
+            $guzzleClient = new Client();
+            $response = $guzzleClient->post('https://api.xendit.co/v2/invoices', [
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'auth' => [$xenditApiKey, ''],
+                'json' => [
+                    "external_id" => "order-" . $orderId,
+                    "amount" => $sumTotal,
+                    "description" => (env('APP_NAME') ?? 'Food') . ' Payment',
+                    "invoice_duration" => 60*60, //detik
+                ]
+            ]);
+            $invoiceUrl = json_decode($response->getBody()->getContents())->invoice_url;
+            OrderFromTable::find($orderId)->update([
+                'payment_url' => $invoiceUrl
+            ]);
+        }
+
+
         $orderDetail = $orderDetail->map(function($row) use($orderId) { 
             $row['order_id'] = $orderId;
             return $row; 
         });
         OrderFromTableDetail::insert($orderDetail->toArray());
 
-        return redirect()->route('table-order.index', ['table_id' => $request->table_id])->with('message', 'New order has been added');
+        return redirect()->to($invoiceUrl);
+        // return redirect()->route('table-order.index', ['table_id' => $request->table_id])->with('message', 'New order has been added');
     }
 
     /**
@@ -104,6 +130,22 @@ class OrderFromTableController extends Controller
         } // update order to ready if all order detail is ready
 
         return redirect()->back()->with('message', 'Order Detail Updated');
+    }
+
+    public function xendit_callback(Request $request) 
+    {
+        $request->validate([
+            'external_id' => ['required'],
+            'amount' => ['required']
+        ]);
+
+        OrderFromTable::where([
+            'id' => str_replace('order-', '', $request->external_id),
+            'sum_total' => $request->amount
+        ])->first()->update([
+            'status' => 'pending',
+            'payment_url' => ''
+        ]);
     }
 
     /**

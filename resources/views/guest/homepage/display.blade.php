@@ -57,7 +57,7 @@
         <input type="text" name="on_behalf_of" class="form-control mb-3" required placeholder="Order on behalf of">
         <div>
           <a href="{{ route('table-order.index', ['table_id' => $table->id]) }}" class="btn" style="color:white; background:tomato;">Orders List</a>
-          <button class="btn" id="order-naw-btn" style="background: tomato; color: white" id="submit-cart">Order Now</button>
+          <button class="btn" id="#" style="background: tomato; color: white" id="submit-cart">Order Now</button>
         </div>
       </form>
     </div>
@@ -165,8 +165,11 @@
       }
     })
 
-    $('.order-naw-btn').click(function() {
-      
+    $('#order-now-btn').click(function() {
+      delete localStorage.cart
+      cart = {}
+      $(`.count`).text(0)
+      printToCart(cart)
     })
   </script>
 @endsection

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TableController;
 use App\Http\Controllers\Seller\ProductController;
 use App\Http\Controllers\AuthController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Seller\ProductCategoryController;
 use App\Http\Controllers\Seller\ProductDisplayStatusController;
 use App\Http\Controllers\Seller\ProductStockController;
 use Illuminate\Support\Facades\Route;
+use Intervention\Image\Gd\Commands\RotateCommand;
 
 Route::get('/', [HomepageController::class, 'index']);
 Route::get('/display/{table}', [HomepageController::class, 'display'])->name('display');
@@ -25,6 +27,8 @@ Route::post('/profile-setting-attempt', [AuthController::class, 'profile_setting
 Route::middleware('auth.role:admin')->prefix('admin')->group(function() {
   Route::get('/', function () { return view('admin.dashboard.index', ['title'=>'Dashboard Admin']); });
   Route::resource('table', TableController::class)->except(['create', 'show', 'edit']);
+  Route::get('setting', [SettingController::class, 'index']);
+  Route::put('setting/save', [SettingController::class, 'save'])->name('save_setting');
 });
 
 Route::middleware('auth.role:seller')->prefix('seller')->group(function() {
