@@ -9,6 +9,7 @@
           <thead>
             <tr>
               <th>No</th>
+              <th>QrCode</th>
               <th>Table Name</th>
               <th>Action</th>
             </tr>
@@ -17,6 +18,9 @@
             @foreach ($tables as $idx => $table)
               <tr>
                 <td>{{ $idx+1 }}</td>
+                <td>
+                  <img src="https://chart.googleapis.com/chart?chs=360x360&cht=qr&chl={{ urlencode(route('display', $table->id)) }}&choe=UTF-8" width="100" height="100" alt="table qr code">
+                </td>
                 <td class="text-capitalize">{{ $table->name }}</td>
                 <td>
                   <button class="btn btn-primary btn-sm edit-btn" data-name="{{ $table->name }}" data-url="{{ route('table.update', $table->id) }}">edit</button>

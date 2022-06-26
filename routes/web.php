@@ -10,7 +10,6 @@ use App\Http\Controllers\Seller\ProductCategoryController;
 use App\Http\Controllers\Seller\ProductDisplayStatusController;
 use App\Http\Controllers\Seller\ProductStockController;
 use Illuminate\Support\Facades\Route;
-use Intervention\Image\Gd\Commands\RotateCommand;
 
 Route::get('/', [HomepageController::class, 'index']);
 Route::get('/display/{table}', [HomepageController::class, 'display'])->name('display');
@@ -21,7 +20,7 @@ Route::post('/loginAttempt', [AuthController::class, 'loginAttempt']);
 Route::get('/register', [AuthController::class, 'register']);
 Route::post('/registerAttempt', [AuthController::class, 'registerAttempt']);
 Route::get('/logout', [AuthController::class, 'logout']);
-Route::get('/profile-setting', [AuthController::class, 'profile_setting'], );
+Route::get('/profile-setting', [AuthController::class, 'profile_setting'] );
 Route::post('/profile-setting-attempt', [AuthController::class, 'profile_setting_attempt']);
 
 Route::middleware('auth.role:admin')->prefix('admin')->group(function() {
