@@ -21,7 +21,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        if (request('datatables')) return $this->datatables();
+        if (request('datatables'))
+            return $this->datatables();
         return view('seller.product.index', ['title' => 'List All Products']);
     }
     private function datatables()
@@ -88,7 +89,8 @@ class ProductController extends Controller
                 'filename' => $this->handleUploadedImage($image)
             ];
         }
-        if (count($secondaryImageDatas)) ProductImages::insert($secondaryImageDatas); //secondary images
+        if (count($secondaryImageDatas))
+            ProductImages::insert($secondaryImageDatas); //secondary images
 
         /**
          * insert categories
@@ -157,19 +159,21 @@ class ProductController extends Controller
         /**
          * update image
          */
-        if($request->file('image_primary')) {
+        if ($request->file('image_primary')) {
             $db = $product->images()->where('type', 'primary')->first();
             $filepath = public_path('uploads/images/products/' . auth()->user()->id . '/' . $db->filename);
-            if (file_exists($filepath)) unlink($filepath); //delete img file
+            if (file_exists($filepath))
+                unlink($filepath); //delete img file
             $db->filename = $this->handleUploadedImage($request->file('image_primary')); //handle upload file
             $db->save();
         }
-        if($request->file('images')) {
-            foreach($request->file('images') as $id => $image) {
+        if ($request->file('images')) {
+            foreach ($request->file('images') as $id => $image) {
                 $db = $product->images()->where('id', $id)->first();
                 if ($db) {
                     $filepath = public_path('uploads/images/products/' . auth()->user()->id . '/' . $db->filename);
-                    if (file_exists($filepath)) unlink($filepath); //delete img file
+                    if (file_exists($filepath))
+                        unlink($filepath); //delete img file
                     $db->filename = $this->handleUploadedImage($image); //handle upload file
                     $db->save();
                 } else {
@@ -194,7 +198,7 @@ class ProductController extends Controller
          * update categories
          */
         DB::table('products_categories_relations')->where('product_id', $product->id)->delete();
-        DB::table('products_categories_relations')->insert(array_map(function($row)use($product){
+        DB::table('products_categories_relations')->insert(array_map(function ($row) use ($product) {
             return ['category_id' => $row, 'product_id' => $product->id];
         }, $request->categories));
 
@@ -214,7 +218,8 @@ class ProductController extends Controller
         DB::table('products_categories_relations')->where('product_id', $product->id)->delete(); //delete categories
         foreach ($product->images->pluck('filename') as $filename) {
             $filepath = public_path('uploads/images/products/' . auth()->user()->id . '/' . $filename);
-            if (file_exists($filepath)) unlink($filepath);
+            if (file_exists($filepath))
+                unlink($filepath);
         }
         ProductImages::where('product_id', $product->id)->delete(); //delete images
         $product->delete(); //delete product
@@ -228,11 +233,16 @@ class ProductController extends Controller
             ->join('products as p', 'p.id', '=', 'pi.product_id')
             ->select('p.user_id')
             ->where('pi.id', $imageId)->first()->user_id;
-        if ($productUserId !== auth()->user()->id) return redirect()->back()->withErrors(['image' => 'you\'re not authorized']); //authorized
+
+        // dd($productUserId !== auth()->user()->id);
+
+        if ($productUserId !== auth()->user()->id)
+            return redirect()->back()->withErrors(['image' => 'you\'re not authorized']); //authorized
 
         $productImage = ProductImages::find($imageId);
         $filepath = public_path('uploads/images/products/' . auth()->user()->id . '/' . $productImage->filename);
-        if (file_exists($filepath)) unlink($filepath); //delete img file
+        if (file_exists($filepath))
+            unlink($filepath); //delete img file
         $productImage->delete(); //delete img data
 
         return redirect()->back()->with('message', 'hes been deleted');

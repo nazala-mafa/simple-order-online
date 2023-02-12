@@ -1,5 +1,8 @@
 <style>
-  #cart-count { position: relative; }
+  #cart-count {
+    position: relative;
+  }
+
   #cart-count span {
     position: absolute;
     top: -5px;
@@ -8,8 +11,14 @@
     background: var(--blue);
     color: white;
   }
-  #user-dropdown { cursor: pointer; }
-  #user-dropdown::after { display: none; }
+
+  #user-dropdown {
+    cursor: pointer;
+  }
+
+  #user-dropdown::after {
+    display: none;
+  }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -30,10 +39,13 @@
       <span class="navbar-text">
         @if (auth()->check())
           <div class="btn-group">
-            <i id="user-dropdown" class="fas fa-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <i id="user-dropdown" class="fas fa-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false"></i>
             <div class="dropdown-menu">
-              <a class="dropdown-item text-dark" href="{{ url()->to('/'.auth()->user()->role.'/setting') }}"><i class="fas fa-cog"></i> Setting</a>
-              <a class="dropdown-item text-dark" href="{{ url()->to('/logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              <a class="dropdown-item text-dark" href="{{ url()->to('/' . auth()->user()->role) }}"><i
+                  class="fas fa-cog"></i> Setting</a>
+              <a class="dropdown-item text-dark" href="{{ url()->to('/logout') }}"><i class="fas fa-sign-out-alt"></i>
+                Logout</a>
             </div>
           </div>
         @else

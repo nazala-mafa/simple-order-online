@@ -17,3 +17,4 @@ Aplikasi pemesanan ditempat, dengan sistem pembayaran cashless.
 - AdminLTE
 - Xendit Payment Gateway
 - MySql Database
+- QRCode Generator
